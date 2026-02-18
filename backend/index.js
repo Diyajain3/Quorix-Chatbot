@@ -14,8 +14,8 @@ const port=process.env.PORT || 3000
 app.use(cors({
   origin: [
     "http://localhost:5173",
-  "https://quorix-chatbot1.onrender.com", // frontend
-      "https://quorix-chatbot.onrender.com" ], // backend (safe),
+  
+  ],
   methods: ["GET", "POST"],
   credentials: true
 }));

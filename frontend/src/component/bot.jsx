@@ -26,7 +26,7 @@ function Bot() {
   try {
 
     const res = await axios.post(
-  "https://quorix-chatbot.onrender.com/bot/v1/message",
+  "http://localhost:4000/bot/v1/message",
   {
     text: input
   }
