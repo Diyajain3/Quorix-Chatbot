@@ -21,15 +21,17 @@ function Bot() {
   if (!input.trim()) return;
 
   setLoading(true);
+  
 
   try {
 
     const res = await axios.post(
-      "http://localhost:4000/bot/v1/message",
-      {
-        text: input
-      }
-    );
+  "https://quorix-chatbot.onrender.com/bot/v1/message",
+  {
+    text: input
+  }
+);
+
 
     if (res.status === 200) {
 
