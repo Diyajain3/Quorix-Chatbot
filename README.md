@@ -2,18 +2,6 @@
 
 > A smart, full-stack conversational AI chatbot built with the MERN stack — fast, scalable, and designed for seamless real-time interaction.
 
----
-
-## 📌 Table of Contents
-
-- [About the Project](#about-the-project)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-- [Screenshots](#screenshots)
-- [Environment Variables](#environment-variables)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
