@@ -99,18 +99,6 @@ The app will be available at `http://localhost:3000`.
 
 ---
 
-## 📸 Screenshots
-
-> _Add screenshots of your application here to give visitors a visual preview._
-
-| Chat Interface | Login Page |
-|---|---|
-| ![Chat UI](./screenshots/chat.png) | ![Login](./screenshots/login.png) |
-
-> 💡 **Tip:** Place your screenshots in a `/screenshots` folder at the root of the repo and update the paths above.
-
----
-
 ## 🤝 Contributing
 
 Contributions are what make open source projects great — and they're always welcome here! 🎉
