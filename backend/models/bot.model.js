@@ -14,7 +14,7 @@ const botSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
-});
+}, { timestamps: true });
 
 const Bot = mongoose.model("Bot", botSchema);
 

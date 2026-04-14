@@ -1,5 +1,5 @@
 import React from 'react'
-import Bot from './component/bot'   // Capital B
+import Bot from './component/bot'
 
 function App() {
   return (

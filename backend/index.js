@@ -18,21 +18,36 @@ app.use(express.json());
 // =========================
 // 🔥 CORS FIX (ROBUST METHOD)
 // =========================
+const allowedOrigins = [
+  "https://quorixchatbotbydiya.vercel.app",
+  "https://quorix-chatbot.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:3000",
+];
+
 app.use((req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "https://quorixchatbotbydiya.vercel.app"
-  );
+  const origin = req.headers.origin;
+
+  // Allow any vercel.app subdomain for the project or exact origins
+  if (
+    origin &&
+    (allowedOrigins.includes(origin) ||
+      /^https:\/\/quorix-chatbot.*\.vercel\.app$/.test(origin))
+  ) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
 
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS"
+    "GET, POST, PUT, DELETE, OPTIONS"
   );
 
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Content-Type, Authorization"
   );
+
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
   // Handle preflight request
   if (req.method === "OPTIONS") {

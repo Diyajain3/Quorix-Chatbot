@@ -26,8 +26,9 @@ function Bot() {
     setLoading(true);
 
     try {
+      const API_URL = import.meta.env.VITE_API_URL || "https://quorix-chatbot-diya.onrender.com";
       const res = await axios.post(
-        "https://quorix-chatbot-diya.onrender.com/bot/v1/message",
+        `${API_URL}/bot/v1/message`,
         {
           text: trimmed,
         }

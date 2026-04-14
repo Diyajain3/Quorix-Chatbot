@@ -1,6 +1,6 @@
 const User = require("../models/user.model.js");
 const Bot = require("../models/bot.model.js");
-const OpenAI = require("openai");
+const { OpenAI } = require("openai");
 
 const openai = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
