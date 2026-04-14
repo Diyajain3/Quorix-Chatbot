@@ -1,45 +1,50 @@
-const express = require('express')
-const app = express()
-const mongoose=require("mongoose");
-const dotenv=require("dotenv");
-const BotModel=require("./models/bot.model")
-const UserModel=require("./models/user.model")
-const chatbotRoutes=require("./routes/chatbot.route.js")
+// 🔥 1. LOAD ENV VARIABLES FIRST (VERY IMPORTANT)
+require("dotenv").config();
+
+const express = require('express');
+const app = express();
+const mongoose = require("mongoose");
 const cors = require("cors");
 
+// Routes
+const chatbotRoutes = require("./routes/chatbot.route.js");
 
-dotenv.config();
-const port=process.env.PORT || 3000
+// Models (optional import, but fine if you keep)
+require("./models/bot.model");
+require("./models/user.model");
 
+// Port
+const port = process.env.PORT || 4000;
+
+// 🔥 2. MIDDLEWARES
 app.use(cors({
   origin: [
-    "http://localhost:5173",
-  
+    "http://localhost:5173", // frontend
   ],
   methods: ["GET", "POST"],
   credentials: true
 }));
 
-
-app.get('/', (req, res) => res.send('Hello World!'))
-
-//Middleware
 app.use(express.json());
 
+// 🔥 3. TEST ROUTE
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 
-//database connection code
+// 🔥 4. DATABASE CONNECTION
 mongoose.connect(process.env.MONGO_URI)
-.then(()=>
-{
-  console.log("Connected to mongodb")
-}).catch((error)=>
-{
-  console.log("Error connectiong to MongoDB", error);
-})
+  .then(() => {
+    console.log("✅ Connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log("❌ Error connecting to MongoDB:", error);
+  });
 
-//Defining Routes
-  app.use("/bot/v1/", chatbotRoutes)
+// 🔥 5. ROUTES
+app.use("/bot/v1", chatbotRoutes);
 
-
-
-app.listen(port, () => console.log(`Server running on ${port}!`))
+// 🔥 6. START SERVER
+app.listen(port, () => {
+  console.log(`🚀 Server running on http://localhost:${port}`);
+});

@@ -1,19 +1,21 @@
+const mongoose = require("mongoose");
 
-const mongoose=require("mongoose");
-
-const botSchema=new mongoose.Schema({
-  
-  text:{
-    type:String,
-    required:true
+const botSchema = new mongoose.Schema({
+  sender: {
+    type: String,
+    enum: ["bot"],
+    default: "bot"
   },
-  timestamp:{
-    type:Date,
-    default:Date.now()
+  text: {
+    type: String,
+    required: true
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now
   }
+});
 
-})
+const Bot = mongoose.model("Bot", botSchema);
 
-const Bot=mongoose.model("Bot",botSchema);
-
-module.exports = Bot ;
+module.exports = Bot;
