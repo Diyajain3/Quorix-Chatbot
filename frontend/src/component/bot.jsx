@@ -26,9 +26,12 @@ function Bot() {
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        "https://quorix-chatbot-diya.onrender.com/bot/v1/message",
-        { text: trimmed }
+    const res = await axios.post(
+  "https://quorix-chatbot-diya.onrender.com/bot/v1/message",
+  {
+    text: input
+  }
+);
       );
 
       if (res.status === 200) {

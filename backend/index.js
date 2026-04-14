@@ -17,11 +17,9 @@ const port = process.env.PORT || 4000;
 // ✅ FIXED CORS CONFIG
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://quorixchatbotbydiya.vercel.app", // 
-    ],
-    methods: ["GET", "POST"],
+    origin: "https://quorixchatbotbydiya.vercel.app",
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
