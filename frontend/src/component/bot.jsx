@@ -16,7 +16,7 @@ function Bot() {
     const trimmed = input.trim();
     if (!trimmed || loading) return;
 
-    // 🔥 Optimistic UI (show user message instantly)
+    // 🔥 Show user message instantly
     setMessages((prev) => [
       ...prev,
       { text: trimmed, sender: "user" },
@@ -26,12 +26,11 @@ function Bot() {
     setLoading(true);
 
     try {
-    const res = await axios.post(
-  "https://quorix-chatbot-diya.onrender.com/bot/v1/message",
-  {
-    text: input
-  }
-);
+      const res = await axios.post(
+        "https://quorix-chatbot-diya.onrender.com/bot/v1/message",
+        {
+          text: trimmed,
+        }
       );
 
       if (res.status === 200) {
@@ -75,7 +74,7 @@ function Bot() {
         </div>
       </header>
 
-      {/* Chat */}
+      {/* Chat Area */}
       <main className="flex-1 flex flex-col pt-24 pb-32">
         <div className="w-full max-w-3xl mx-auto px-4">
 
@@ -109,6 +108,7 @@ function Bot() {
                 </div>
               ))}
 
+              {/* Loading animation */}
               {loading && (
                 <div className="flex justify-start">
                   <div className="bg-slate-900 border border-white/5 px-5 py-3 rounded-2xl">
@@ -127,7 +127,7 @@ function Bot() {
         </div>
       </main>
 
-      {/* Input */}
+      {/* Input Box */}
       <footer className="fixed bottom-0 w-full bg-[#050505] py-6">
         <div className="max-w-3xl mx-auto px-4 flex gap-2">
           <input
