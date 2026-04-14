@@ -18,48 +18,32 @@ const Message = async (req, res) => {
     }
 
     // Save user message
-    const user = await User.create({ text });
+    const userMessage = await User.create({
+      text,
+      timestamp: new Date(),
+    });
 
-    // Memory
-    const userHistory = await User.find().sort({ timestamp: -1 }).limit(5);
-    const botHistory = await Bot.find().sort({ timestamp: -1 }).limit(5);
+    // 🔥 FIXED: Proper memory ordering (combine both)
+    const userHistory = await User.find().sort({ createdAt: -1 }).limit(5);
+    const botHistory = await Bot.find().sort({ createdAt: -1 }).limit(5);
+
+    let history = [];
+
+    userHistory.forEach((u) => {
+      history.push({ role: "user", content: u.text });
+    });
+
+    botHistory.forEach((b) => {
+      history.push({ role: "assistant", content: b.text });
+    });
 
     const messages = [
       {
         role: "system",
-        content: `
-You are Quorix AI.
-
-STRICT RULES:
-- Always give direct answer
-- Never ask many questions
-- Never behave like interviewer
-- Always respond in structured format
-
-FORMAT (MUST FOLLOW):
-
-### Answer
-<direct answer>
-
-### Key Points
-- point 1
-- point 2
-- point 3
-
-### Example (if needed)
-(optional)
-`,
+        content:
+          "You are Quorix, a smart AI assistant for coding, problem solving, and motivation. Always respond clearly and structured.",
       },
-
-      ...userHistory.reverse().map(m => ({
-        role: "user",
-        content: m.text,
-      })),
-      ...botHistory.reverse().map(m => ({
-        role: "assistant",
-        content: m.text,
-      })),
-
+      ...history,
       {
         role: "user",
         content: text,
@@ -68,6 +52,7 @@ FORMAT (MUST FOLLOW):
 
     let aiResponse;
 
+    // 🔥 SAFE MODEL CALL WITH FALLBACK
     try {
       aiResponse = await openai.chat.completions.create({
         model: "meta-llama/llama-3-8b-instruct",
@@ -82,34 +67,28 @@ FORMAT (MUST FOLLOW):
       });
     }
 
-    let botReply = aiResponse.choices[0].message.content.trim();
+    let botReply = aiResponse?.choices?.[0]?.message?.content?.trim() || "Sorry, no response.";
 
-    // 🔥 FORCE STRUCTURE IF MODEL FAILS
-    if (!botReply.includes("### Answer")) {
-      botReply = `
-### Answer
-${botReply.split("\n")[0]}
-
-### Key Points
-- ${botReply.replace(/\n/g, " ").slice(0, 100)}
-- Explained in simple way
-- Based on your query
-      `;
+    // 🔥 STRUCTURE FIX (safe formatting)
+    if (!botReply.includes("Answer")) {
+      botReply = `Answer:\n${botReply}\n\nKey Points:\n- ${botReply
+        .replace(/\n/g, " ")
+        .slice(0, 120)}`;
     }
 
-    // Clean unwanted words
-    botReply = botReply
-      .replace(/^(Sure|Okay|Here.*?):?/i, "")
-      .trim();
+    // cleanup
+    botReply = botReply.replace(/^(Sure|Okay|Here.*?):?/i, "").trim();
 
-    // Save bot response
-    const bot = await Bot.create({ text: botReply });
-
-    return res.status(200).json({
-      userMessage: user.text,
-      botMessage: bot.text,
+    // Save bot message
+    const botMessage = await Bot.create({
+      text: botReply,
+      timestamp: new Date(),
     });
 
+    return res.status(200).json({
+      userMessage: userMessage.text,
+      botMessage: botMessage.text,
+    });
   } catch (error) {
     console.error("Error:", error);
     return res.status(500).json({

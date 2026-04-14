@@ -1,7 +1,6 @@
-// 🔥 1. LOAD ENV VARIABLES FIRST (VERY IMPORTANT)
 require("dotenv").config();
 
-const express = require('express');
+const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -9,42 +8,49 @@ const cors = require("cors");
 // Routes
 const chatbotRoutes = require("./routes/chatbot.route.js");
 
-// Models (optional import, but fine if you keep)
+// Models
 require("./models/bot.model");
 require("./models/user.model");
 
-// Port
 const port = process.env.PORT || 4000;
 
-// 🔥 2. MIDDLEWARES
-app.use(cors({
-  origin: [
-    "http://localhost:5173", // frontend
-  ],
-  methods: ["GET", "POST"],
-  credentials: true
-}));
+// ✅ FIXED CORS CONFIG
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://quorixchatbotbydiya.vercel.app", // 
+    ],
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
-// 🔥 3. TEST ROUTE
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+// Test route
+app.get("/", (req, res) => {
+  res.send("🚀 Quorix API is running");
 });
 
-// 🔥 4. DATABASE CONNECTION
-mongoose.connect(process.env.MONGO_URI)
+// ✅ FIXED MONGOOSE CONNECTION
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log("✅ Connected to MongoDB");
+
+    // ✅ Start server ONLY after DB connects
+    app.listen(port, () => {
+      console.log(`🚀 Server running on http://localhost:${port}`);
+    });
   })
   .catch((error) => {
-    console.log("❌ Error connecting to MongoDB:", error);
+    console.error("❌ MongoDB connection error:", error);
+    process.exit(1); // stop server if DB fails
   });
 
-// 🔥 5. ROUTES
+// Routes
 app.use("/bot/v1", chatbotRoutes);
-
-// 🔥 6. START SERVER
-app.listen(port, () => {
-  console.log(`🚀 Server running on http://localhost:${port}`);
-});
